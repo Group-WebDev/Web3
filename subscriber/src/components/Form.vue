@@ -39,9 +39,11 @@ export default {
     };
   },
   methods: {
-    checkform: function(e) {    this.dialog = false;
+    checkform: function(e) {
+      if (this.email !== null && this.password !== null) {
+        this.dialog = false;
         axios
-          .post("http://localhost:3000/subscribe", { user: user })
+          .post("http://localhost:3000/subscribe", { user: this.user })
           .then(res => {
             alert("successfully loged in!");
           })
@@ -49,7 +51,7 @@ export default {
             console.log(err);
           });
         this.$router.push("/homepage");
-      
+      }
       e.preventDefault();
     }
   },
