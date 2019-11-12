@@ -16,9 +16,9 @@
                         <template v-slot:label>
                             <div @click.stop="">
                                 Do you accept the
-                                <a href="javascript:;" @click.stop="terms = true">terms</a>
+                                <a href="javascript:;" @click.stop="terms">terms</a>
                                 and
-                                <a href="javascript:;" @click.stop="conditions = true">conditions?</a>
+                                <a href="javascript:;" @click.stop="conditions">conditions?</a>
                             </div>
                         </template>
                     </v-checkbox>

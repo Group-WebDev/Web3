@@ -80,6 +80,15 @@ export default {
             await this.$store.dispatch('saveData', this.data);
             console.log('back');
             this.submit()
+                axios
+        .post("http://localhost:3000/getItem", { id: this.item })
+        .then(res => {
+          this.task = res.data.item.task;
+          this.schedule = res.data.item.schedule;
+        })
+        .catch(err => {
+          console.log(err);
+        });
             // this.$router.push('/homepage');
         },
         resetForm() {
@@ -92,6 +101,7 @@ export default {
         submit() {
             this.resetForm()
         },
+
     },
     rules: {
         required: value => !!value || 'Required.',
