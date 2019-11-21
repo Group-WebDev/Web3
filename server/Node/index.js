@@ -35,6 +35,37 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
+app.get('/', function (req, res, next) {
+  let token = req.headers.token
+  console.log(req.headers.token)
+  if (token.startsWith('Bearer ')) {
+    // Remove Bearer from string
+    token = token.slice(7, token.length);
+  }
+  if (token) {
+    jwt.verify(token, config.secret, (err, decoded) => {
+      if (err) {
+        return res.json({
+          success: false,
+          message: 'Token is not valid'
+        });
+      } else {
+        req.decoded = decoded;
+        next();
+        res.status(200).json({
+          message : "Auth token is valid"
+        })
+      }
+    });
+  } else {
+    return res.json({
+      success: false,
+      message: 'Auth token is not supplied'
+    });
+  }
+})
+
+
 app.get('/login', function (req, res) {
   let test = async function () {
     console.log(req.headers.username)
