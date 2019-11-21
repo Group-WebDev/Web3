@@ -92,7 +92,7 @@ app.post('/event/create', (req, res) => {
     let item = await event.getLastEvent();
     res.send(item)
   }
-  
+
   test();
 })
 // EVENTS API
@@ -149,13 +149,13 @@ app.put('/event/update', (req, res) => {
 // ADD NEW SUBSCRIBER
 app.post('/subscribe', function (req, res) {
   let test = async function () {
-    const exist = await subscriber.getByUsername(req.body.username);
+    const exist = await subscriber.getByUsername(req.headers.username);
     if (exist == null) {
       let data = {
-        username: req.body.username,
-        email: req.body.email,
-        address: req.body.address,
-        event : req.body.event
+        username: req.headers.username,
+        email: req.headers.email,
+        address: req.headers.address,
+        event : req.headers.event
       }
       await subscriber.addSubscriber(data);
       let item = await subscriber.getLastSubscriber();
@@ -173,24 +173,23 @@ app.post('/subscribe', function (req, res) {
 // DELETE SUBSCRIBER
 app.delete('/subscriber/delete', (req, res) => {
   let test = async function () {
-    let subscriber = await event.deleteSubscriber(req.body.username);
-    console.log("events : ", subscriber)
+    let subscribers= await subscriber.deleteSubscriber(req.body.username);
     res.status(200).send("subscriber deleted!");
+    console.log("subscribers : ", subscribers)
+
   }
   test();
 })
 
 // DISPLAY ALL SUBSCRIBERS
-app.get('/subscribers/list'){
+app.get('/subscribers/list',(req,res)=>{
   let test = async function(){
-    let subscribers  = await event.listOfSubscribers()
+    let subscribers  = await subscriber.listOfSubscribers()
+    console.log(subscribers)
     res.status(200).send(subscribers)
   }
-}
-
-
-
-
+  test();
+})
 
 
 app.listen(3000, function () {

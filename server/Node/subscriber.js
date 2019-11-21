@@ -1,10 +1,10 @@
 const mongoose = require("mongoose");
 
 var Schema = new mongoose.Schema({
-    username: {type:String, required:true, unique:true},
-    email: {type: String, required: true},
-    address: {type: String, required: true},
-    event:{type:String, required:true}
+    username: {type:String, unique:true},
+    email: {type: String},
+    address: {type: String},
+    event:{type:String}
  });
 
  Schema.statics.addSubscriber = async function (subscriber){
@@ -28,5 +28,5 @@ var Schema = new mongoose.Schema({
  Schema.statics.listOfSubscribers = async function(){
      return await this.find();
  }
- 
+
  module.exports = mongoose.model('subscriber', Schema);
