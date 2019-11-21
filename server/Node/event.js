@@ -27,12 +27,11 @@ var Schema = new mongoose.Schema({
    return await this.findOne({"title" : title});
 }
 
- Schema.statics.updateEvent = async function(newEvent) {
+// collection.update({_id:"123"}, {$set: {author:"Jessica"}});
+ Schema.statics.updateEvent = async function(title,newEvent) {
        var updateEvent = new this(newEvent);
-   return await updateEvent.updateOne(newEvent);
+return await updateEvent.updateOne({"title" : title},{$set: {newEvent}});
 }
- 
-
 
  Schema.statics.deleteEvent = async function(title) {
    return await this.deleteOne({"title" : title});

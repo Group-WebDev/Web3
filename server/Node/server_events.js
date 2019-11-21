@@ -7,7 +7,7 @@ const event = require("./event");
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
 
-
+var port=3001;
 
 var id = "5dccee7ec4a9d5a69e8c6191";
 
@@ -31,46 +31,7 @@ db.once('open', function () {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.get('/admin/login', function (req, res) {
-  let test = async function () {
-    console.log(req.body.username)
-    const exist = await account.getAccount(req.body.username, req.body.password);
-    if (exist == null) {
-      res.json({
-        message: 'Username not found or invalid password!'
-      })
-    }
-    else {
-      id = exist._id
-      console.log(exist._id)
-      res.send(exist)
-    }
-  }
-  test();
-})
-
-app.post('/subscribe', function (req, res) {
-  let test = async function () {
-    const exist = await subscriber.getByUsername(req.body.username);
-    if (exist == null) {
-      let data = {
-        username: req.body.username,
-        email: req.body.email,
-        address: req.body.address
-      }
-      await subscriber.addSubscriber(data);
-      let item = await subscriber.getLastSubscriber();
-      res.send(item)
-    }
-    else {
-      res.json({
-        message: 'Username already exist!'
-      })
-    }
-  }
-  test();
-})
-
+// CREATE/ADD NEW EVENT
 app.post('/event/create', (req, res) => {
   console.log(req.body)
   let test = async function () {
@@ -89,8 +50,8 @@ app.post('/event/create', (req, res) => {
   test();
 })
 
+// DISPLAY ALL SAVED EVENTS.
 app.get('/event/retrieveAll', (req, res) => {
-  // await event.retrieveEvent;
   let test = async function () {
     let events = await event.retrieveEvents();
     console.log("events : ", events)
@@ -99,9 +60,9 @@ app.get('/event/retrieveAll', (req, res) => {
   test();
 })
 
+// DISPLAY ONLY THE DESIRED EVENT BY USING ITS TITLE
 app.get('/event/retrievebytitle', (req, res) => {
   console.log("title : ",req.headers.title)
-  // await event.retrieveEvent;
   let test = async function () {
     let events = await event.getEvent(req.headers.title);
     console.log("events : ", events)
@@ -110,19 +71,7 @@ app.get('/event/retrievebytitle', (req, res) => {
   test();
 })
 
-
-// app.put('/event/update', (req, res) => {
-//   console.log("title : ",req.headers.title)
-  
-//   // await event.retrieveEvent;
-//   let test = async function () {
-//     let events = await event.getEvent(req.headers.title);
-//     console.log("events : ", events)
-//     res.status(200).send(events);
-//   }
-//   test();
-// })
-
+// DELETE AN SPECIFIC EVENT BY USING ITS TITLE
 app.delete('/event/delete', (req, res) => {
   let test = async function () {
     let events = await event.deleteEvent(req.body.title);
@@ -132,44 +81,24 @@ app.delete('/event/delete', (req, res) => {
   test();
 })
 
-app.post('/send', (req, res) => {
-  var transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: 'irishs.rufo@gmail.com',
-      pass: 'Rufoelisa897'
+app.put('/event/update', (req, res) => {
+    let test = async function () {
+        var data = {
+            newTitle : req.body.newTitle,
+            newdateCreated: req.body.newdateCreated,
+            newdateEvent: req.body.newdateEvent,
+            newaddress: req.body.newaddress,
+            newdescription: req.body.newdescription,
+            newcreatedBy: req.body.newcreatedBy
+        }
+      let events = await event.updateEvent(data);
+      console.log("events : ", events)
+      res.status(200).send("event updated!");
     }
-  });
-
-  var mailOptions = {
-    from: 'irishs.rufo@gmail.com',
-    to: 'irishs.rufo@gmail.com',
-    subject: 'Sending Email using Node.js',
-    text: 'That was easy!'
-  };
-
-  transporter.sendMail(mailOptions, function (error, info) {
-    if (error) {
-      console.log(error);
-      res.send("dili okeey!")
-    } else {
-      console.log('Email sent: ' + info.response);
-      res.send("okeey keeyooh!")
-
-    }
-  });
-})
-'use strict';
+    test();
+  })
 
 
-
-// async..await is not allowed in global scope, must use a wrapper
-
-app.listen(3000, function () {
+app.listen(port, function () {
   console.log("done!")
 })
-
-// app.listen(300, 8888, '127.0.0.1', function(){
-//   console.log("listening to port 3000!")
-// })
-
