@@ -1,6 +1,6 @@
 <template>
 <v-container class="mx-auto" max-width="800" id="card">
-           <v-img id="logo" :src="require('@/assets/logo.png')"></v-img>
+           <v-img id="logo" :src="require('@/assets/icon.png')"></v-img>
         <p>Connect People to Environmental Activities</p>
 </v-container>
 </template>
@@ -24,6 +24,7 @@ p{
     font-size: 30px; 
 }
 #logo{
-    width:30%;
+    width:15%;
+    height: 15%;
 }
 </style>

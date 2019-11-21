@@ -8,7 +8,7 @@
         <v-container>
             <center>
              <h1 v-show="isSubscribe">Welcome To</h1>
-                <v-img :src="require('@/assets/logo.png')" id="image"></v-img>
+                <v-img :src="require('@/assets/logos.png')" id="image"></v-img>
             </center>
             <form id="form" @submit.prevent="subscribe" v-show="!isSubscribe">
                 <v-container>
@@ -75,8 +75,8 @@ export default {
 
 <style scoped>
 #image {
-    width: 40%;
-    height: 40%;
+    width: 30%;
+    height: 30%;
 }
 h1{
     color:green;
