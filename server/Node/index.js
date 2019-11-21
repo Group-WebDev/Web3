@@ -5,13 +5,12 @@ const account = require("./models/admin");
 const subscriber = require("./models/subscriber");
 const event = require("./models/event");
 const bodyParser = require('body-parser')
-var cors = require('cors')
+const cors = require('cors')
 const jwt = require("jsonwebtoken")
-var bcrypt = require("bcryptjs");
-
+const bcrypt = require("bcryptjs");
 const sgMail = require('@sendgrid/mail');
-
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
+const config = require('./config')
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
