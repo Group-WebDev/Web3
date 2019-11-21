@@ -27,6 +27,7 @@ var Schema = new mongoose.Schema({
    return await this.findOne({"title" : title});
 }
 
+
 // collection.update({_id:"123"}, {$set: {author:"Jessica"}});
  Schema.statics.updateEvent = async function(title,newEvent) {
        var updateEvent = new this(newEvent);

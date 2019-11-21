@@ -6,9 +6,6 @@ const subscriber = require("./subscriber");
 const event = require("./event");
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
-
-
-
 var id = "5dccee7ec4a9d5a69e8c6191";
 
 var mongoose = require('mongoose');
@@ -95,6 +92,7 @@ app.post('/event/create', (req, res) => {
     let item = await event.getLastEvent();
     res.send(item)
   }
+  
   test();
 })
 // EVENTS API

@@ -28,4 +28,5 @@ var Schema = new mongoose.Schema({
  Schema.statics.listOfSubscribers = async function(){
      return await this.find();
  }
+ 
  module.exports = mongoose.model('subscriber', Schema);
