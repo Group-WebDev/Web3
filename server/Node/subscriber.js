@@ -1,24 +1,15 @@
 const mongoose = require("mongoose");
 
 var Schema = new mongoose.Schema({
-<<<<<<< HEAD
     username: {type:String, required:true, unique:true},
     email: {type: String, required: true},
-    address: {type: String, required: true}
-=======
-    username: {type:String,  unique:true},
-    email: {type: String},
-    address: {type: String}
->>>>>>> 47aa3d6ece35d4ae36d9227c1468941e1d929ecb
+    address: {type: String, required: true},
+    event:{type:String, required:true}
  });
 
  Schema.statics.addSubscriber = async function (subscriber){
     var Subscriber = new this(subscriber);
     var result =  await Subscriber.save(subscriber);
-<<<<<<< HEAD
-=======
-    console.log(result);
->>>>>>> 47aa3d6ece35d4ae36d9227c1468941e1d929ecb
     return result;
  }
  
@@ -30,4 +21,11 @@ var Schema = new mongoose.Schema({
     return await this.findOne({"username" : username});
  }
 
+ Schema.statics.deleteSubscriber = async function(username){
+     return await this.deleteOne({"username" : username})
+ }
+
+ Schema.statics.listOfSubscribers = async function(){
+     return await this.find();
+ }
  module.exports = mongoose.model('subscriber', Schema);
