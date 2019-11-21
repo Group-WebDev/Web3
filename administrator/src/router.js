@@ -6,17 +6,28 @@ import Login from './views/NavForm2.vue'
 import HomePage from './views/HomePage.vue'
 import Issues from './views/Issues.vue'
 import Projects from './views/Projects.vue'
-
+import store from "./store"
 Vue.use(Router)
 
-export default new Router({
+var router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
   routes: [
+ 
+     
     {
       path: '/',
       name: 'login',
-      component: Login
+      component: Login,
+      beforeEnter: (to, from, next) => {
+        if (store.state.authenticated == true) {
+            next("/homepage");
+        } else {
+            next();
+        }
+
+    },
+     
     },
     {
       path: '/register',
@@ -26,21 +37,49 @@ export default new Router({
     {
       path: '/homepage',
       name: 'homepage',
-      component: HomePage
+      component: HomePage,
+      beforeEnter: (to, from, next) => {
+        if (store.state.authenticated == false) {
+            next("/");
+        } else {
+            next();
+        }
+    },
     },
     {
       path: '/issues',
       name: 'issues',
-      component: Issues
+      component: Issues,
+      beforeEnter: (to, from, next) => {
+        if (store.state.authenticated == false) {
+            next("/");
+        } else {
+            next();
+        }
+    },
     },
     {
       path: '/projects',
       name: 'projects',
-      component: Projects
+      component: Projects,
+      beforeEnter: (to, from, next) => {
+        if (store.state.authenticated == false) {
+            next("/");
+        } else {
+            next();
+        }
+    },
     },
     {
-      path: '/edit',
-      name: 'edit',
+      path: '*',
+      name: 'pathway',
+      beforeEnter: (to, from, next) => {
+        if (store.state.authenticated == false) {
+            next("/");
+        } else {
+            next();
+        }
+    },
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
@@ -48,3 +87,4 @@ export default new Router({
     }
   ]
 })
+export default router;

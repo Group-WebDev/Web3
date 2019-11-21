@@ -1,24 +1,26 @@
 <template>
-<v-card color="blue lighten-4" flat  tile>
-    <center><v-toolbar dense height="100" >
-        <v-img :src="require('@/assets/icon.png')" max-width="100"></v-img>
-        <h1>Eco-Green</h1>
-    </v-toolbar></center>
-</v-card>
+<div>
+    <v-app-bar id="appbar" dense :collapse="!collapseOnScroll"  elevate-on-scroll
+      :collapse-on-scroll="collapseOnScroll" fixed>
+        <v-toolbar-title>EcoJoin</v-toolbar-title>
+        <v-spacer></v-spacer>
+        <v-icon large color="teal darken-2">mdi-email</v-icon>
+    </v-app-bar>
+</div>
 </template>
 
 <script>
 export default {
 
+data: () => ({
+      collapseOnScroll: true,
+    }),
 }
 </script>
 
-<style scoped>
-#image {
-    width: 10%;
-    height: 20%;
+<style>
+#appbar{
+    background-color:transparent
 }
-h1{
-    color: green
-}
+
 </style>

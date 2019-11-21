@@ -1,4 +1,4 @@
-# subscriber
+# idb
 
 ## Project setup
 ```

@@ -1,20 +1,20 @@
 <template>
-  <div id="app">
-    <router-view />
-  </div>
+  <v-app>
+    <v-content class="body"> 
+      <router-view />
+    </v-content>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #ccd7e2;
-  
-}
-body{
-  background-color: aliceblue;
-}
+<script>
 
+export default {
+  name: 'App',
+  data: () => ({
+    //
+  }),
+
+};
+</script>
+<style>
 </style>

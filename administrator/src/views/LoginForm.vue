@@ -17,6 +17,7 @@
 
 <script>
 export default {
+    name: 'Login',
     data() {
         return {
             show1: false,
@@ -36,16 +37,20 @@ export default {
         }
     },
     methods: {
-        checkform: function (e) {
-            if (this.email !== null && this.password !== null) {
-                this.$router.push('/homepage')
+        checkform: function () {
+            if (this.user.username !== null && this.user.password !== null) {
+                   sessionStorage.setItem('authenticated', true);
+            sessionStorage.setItem('username', this.user.username);
+            this.$store.commit("setAuthentication", true);
+                this.$router.go({ name: 'homepage' }).catch(err => {
+            console.log(err)})
+              
             }
-            e.preventDefault();
+            // e.preventDefault();
         },
         clear() {
             this.$v.$reset()
-            this.username = ''
-            this.password = ''
+            this.user. password = ''
         },
     },
 }

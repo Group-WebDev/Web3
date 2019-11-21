@@ -12,6 +12,7 @@
 import NavBar from '@/components/NavBar.vue'
 import Button from '@/components/Button.vue'
 export default {
+    // name:'homepage',
     components: {
         NavBar,
         Button

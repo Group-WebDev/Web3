@@ -1,17 +1,8 @@
 <template>
-<v-card class="mx-auto" max-width="500" id="card">
-    <v-img height="200px" :src="require('@/assets/background.jpg')">
-        <br/><br/><br/>
-        <h1>Eco-Green</h1>
-    </v-img>
-    <br/>
-    <v-card-text>
-        <h3>Eco-Green is a Web Application that allows people to unite for one goal which is
-            to save our Environment. It makes them aware about the events of other people that will help our Environment 
-            also it makes them coclude about the current situation of our Mother Nature
-        </h3>
-    </v-card-text>
-</v-card>
+<v-container class="mx-auto" max-width="800" id="card">
+           <v-img id="logo" :src="require('@/assets/logo.png')"></v-img>
+        <p>Connect People to Environmental Activities</p>
+</v-container>
 </template>
 
 <script>
@@ -23,11 +14,16 @@ export default {
 <style>
 #card{
     height: 100%;
+    background-color:transparent;
+    margin-top:5%;
 }
 h1{
     color:white
 }
-h3{
-    font-size: 20px;
+p{
+    font-size: 30px; 
+}
+#logo{
+    width:30%;
 }
 </style>
