@@ -117,12 +117,12 @@ app.delete('/event/delete', (req, res) => {
 app.put('/event/update', (req, res) => {
   let test = async function () {
     var data = {
-      newTitle: req.body.newTitle,
-      newdateCreated: req.body.newdateCreated,
-      newdateEvent: req.body.newdateEvent,
-      newaddress: req.body.newaddress,
-      newdescription: req.body.newdescription,
-      newcreatedBy: req.body.newcreatedBy
+      title: req.body.newTitle,
+      dateCreated: req.body.newdateCreated,
+      dateEvent: req.body.newdateEvent,
+      address: req.body.newaddress,
+      description: req.body.newdescription,
+      createdBy: req.body.newcreatedBy
     }
     let events = await event.updateEvent(data);
     console.log("events : ", events)
