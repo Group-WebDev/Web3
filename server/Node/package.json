@@ -3,8 +3,8 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "nodemon index.js",
-    "start": "node index.js"
+    "dev": "nodemon server_events.js",
+    "start": "node server_events.js"
   },
   "dependencies": {
     "core-js": "^2.6.5",

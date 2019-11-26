@@ -29,13 +29,13 @@ var Schema = new mongoose.Schema({
 
 
 // collection.update({_id:"123"}, {$set: {author:"Jessica"}});
- Schema.statics.updateEvent = async function(title,newEvent) {
+ Schema.statics.updateEvent = async function(id,newEvent) {
        var updateEvent = new this(newEvent);
-return await updateEvent.updateOne({"title" : title},{$set: {newEvent}});
+return await updateEvent.updateOne({"_id" : id},{$set: {newEvent}});
 }
 
- Schema.statics.deleteEvent = async function(title) {
-   return await this.deleteOne({"title" : title});
+ Schema.statics.deleteEvent = async function(id) {
+   return await this.deleteOne({"_id" : id});
 }
  
  module.exports = mongoose.model('event', Schema);

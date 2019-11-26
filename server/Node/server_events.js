@@ -85,7 +85,7 @@ app.post('/event/create', (req, res) => {
 app.get('/event/retrieveAll', (req, res) => {
   let test = async function () {
     let events = await event.retrieveEvents();
-    console.log("events : ", events)
+    // console.log("events : ", events)
     res.status(200).send(events);
   }
   test();
@@ -105,28 +105,32 @@ app.get('/event/retrievebytitle', (req, res) => {
 })
 
 // DELETE AN SPECIFIC EVENT BY USING ITS TITLE
-app.delete('/event/delete', (req, res) => {
+app.delete('/event/delete:id', (req, res) => {
+  console.log(req.body)
   let test = async function () {
-    let events = await event.deleteEvent(req.body.title);
-    console.log("events : ", events)
-    res.status(200).send("events deleted!");
+    await event.deleteEvent(req.params.id);
+    let events = event.retrieveEvents();
+    console.log("deleted")
+    res.status(200).send(events);
   }
   test();
 })
 
-app.put('/event/update', (req, res) => {
+app.put('/event/update:id', (req, res) => {
+  currentDate()
   let test = async function () {
     var data = {
-      title: req.body.newTitle,
-      dateCreated: req.body.newdateCreated,
-      dateEvent: req.body.newdateEvent,
-      address: req.body.newaddress,
-      description: req.body.newdescription,
-      createdBy: req.body.newcreatedBy
+      title: req.body.title,
+      dateCreated: dates,
+      dateEvent: req.body.dateEvent,
+      address: req.body.address,
+      description: req.body.description,
+      createdBy: id
     }
-    let events = await event.updateEvent(data);
-    console.log("events : ", events)
-    res.status(200).send("event updated!");
+    await event.updateEvent(req.params.id, data);
+    let events = await event.retrieveEvents();
+    res.status(200).send(events);
+    console.log('uosdf')
   }
   test();
 })
