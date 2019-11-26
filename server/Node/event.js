@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 var Schema = new mongoose.Schema({
-    title: {type:String},
-    dateCreated: {type: String},
-    dateEvent: {type: String},
-    address: {type: String},
-    description: {type: String},
-    createdBy: {type: String},
+    title: {type:String, required : true},
+    dateCreated: {type: String, required : true},
+    dateEvent: {type: String, required : true},
+    address: {type: String, required : true},
+    description: {type: String, required : true},
+    createdBy: {type: String, required : true},
  });
 
  Schema.statics.addEvent = async function (event){

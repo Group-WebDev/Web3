@@ -6,6 +6,7 @@ const subscriber = require("./subscriber");
 const event = require("./event");
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const cors = require('cors') 
 var id = "5dccee7ec4a9d5a69e8c6191";
 
 var mongoose = require('mongoose');
@@ -25,6 +26,7 @@ db.once('open', function () {
   console.log("we're connected!")
 });
 
+app.use(cors)
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -76,23 +78,23 @@ app.post('/send', (req, res) => {
 })
 'use strict';
 
+ var date = 'now na'
 // CREATE/ADD NEW EVENT
 app.post('/event/create', (req, res) => {
   console.log(req.body)
   let test = async function () {
     let data = {
       title: req.body.title,
-      dateCreated: req.body.datecreated,
+      dateCreated:date,
       dateEvent: req.body.dateevent,
       address: req.body.address,
       description: req.body.description,
       createdBy: id
     }
     await event.addEvent(data);
-    let item = await event.getLastEvent();
-    res.send(item)
+    // let item = await event.getLastEvent();
+    res.status(200).send(data)
   }
-
   test();
 })
 // EVENTS API
