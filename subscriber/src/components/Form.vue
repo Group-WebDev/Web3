@@ -1,43 +1,59 @@
 <template>
 <div>
-<v-dialog v-model="dialog" width="9000">
-    <template v-slot:activator="{on}">
-        <v-btn v-on="on" color="primary" v-show ="!isSubscribe" >Join</v-btn>
-    </template>
-    <v-card class="mx-auto card" max-width="500">
-        <v-container>
-            <center>
-             <h1 v-show="isSubscribe">Welcome To</h1>
-                <v-img :src="require('@/assets/logos.png')" id="image"></v-img>
-            </center>
-            <form id="form" @submit.prevent="subscribe" v-show="!isSubscribe">
-                <v-container>
-                    <v-text-field v-model="username" :rules="[rules.required]" label="Username"></v-text-field>
-                    <v-text-field v-model="email" :rules="[rules.required, rules.email]" label="E-mail"></v-text-field>
-                    <v-text-field v-model="address" :rules="[rules.required]" label="Address"></v-text-field>
-                    <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="blue darken-1" :disabled="!formIsValid" text @click="subscribe">Join</v-btn>
-                    </v-card-actions>
-                </v-container>
-            </form><br />
-        </v-container>
-    </v-card>
-</v-dialog>
+    <v-dialog v-model="dialog" width="9000">
+        <template v-slot:activator="{on}">
+            <v-btn v-on="on" color="primary" v-show="!isSubscribe">Join</v-btn>
+        </template>
+        <v-card class="mx-auto card" max-width="500">
+            <v-container>
+                <center>
+                    <h1 v-show="isSubscribe">Welcome To</h1>
+                    <v-img :src="require('@/assets/logos.png')" id="image"></v-img>
+                </center>
+                <form id="form" @submit.prevent="subscribe" v-show="!isSubscribe">
+                    <v-container>
+                        <v-row>
+                            <v-col cols="12" md="4">
+                                <v-text-field v-model="firstname" :rules="[rules.required]" label="First name" required></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" md="4">
+                                <v-text-field v-model="lastname" :rules="[rules.required]" label="Last name" required></v-text-field>
+                            </v-col>
+
+                            <v-col cols="12" md="4">
+                                <v-text-field v-model="middlename" :rules="[rules.required]" label="Middle Name" required></v-text-field>
+                            </v-col>
+                        </v-row>
+                        <v-text-field v-model="email" :rules="[rules.required, rules.email]" label="E-mail"></v-text-field>
+                        <v-text-field v-model="address" :rules="[rules.required]" label="Address"></v-text-field>
+                        <v-card-actions>
+                            <v-spacer></v-spacer>
+                            <v-btn color="blue darken-1" :disabled="!formIsValid" text @click="subscribe">Join</v-btn>
+                        </v-card-actions>
+                    </v-container>
+                </form><br />
+            </v-container>
+        </v-card>
+    </v-dialog>
 </div>
 </template>
 
 <script>
 // import axios from "axios";
-import {createUser} from '@/components/Repository.js'
+import {
+    createUser
+} from '@/components/Repository.js'
 export default {
     data() {
-        return {    
+        return {
             dialog: false,
             isSubscribe: false,
-                username: '',
-                email: '',
-                address: '',
+            firstname: '',
+            lastname: '',
+            middlename: '',
+            email: '',
+            address: '',
             rules: {
                 required: value => !!value || 'Required.',
                 email: value => {
@@ -50,23 +66,31 @@ export default {
     methods: {
         subscribe: function () {
             this.isSubscribe = true;
-            let data = {username:this.username, email:this.email, address:this.address}
+            let data = {
+                firstname: this.firstname,
+                lastname: this.lastname,
+                middlename: this.middlename,
+                email: this.email,
+                address: this.address
+            }
             createUser(data)
-                .then(data=>{
+                .then(data => {
                     this.$emit('createUser', data.data);
-                    this.username =""
+                    this.username = ""
                     localStorage.setItem('subscriber', data.data)
                 })
-                .catch(err=>alert(err.message))
+                .catch(err => alert(err.message))
         }
     },
     computed: {
         formIsValid() {
             return (
-                this.username &&
+                this.firstname &&
+                this.lastname &&
+                this.middlename &&
                 this.address &&
-                this.email 
-                
+                this.email
+
             )
         },
     },
@@ -78,7 +102,8 @@ export default {
     width: 30%;
     height: 30%;
 }
-h1{
-    color:green;
+
+h1 {
+    color: green;
 }
 </style>

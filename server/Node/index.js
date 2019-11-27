@@ -21,7 +21,7 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 
-mongoose.connect('mongodb://localhost:27017/accounts', {
+mongoose.connect('mongodb://localhost:27017/Users', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -71,21 +71,25 @@ app.post('/subscribe', function (req, res) {
     const msg = {
       to: 'johnpatrick.cabia-an@student.passerellesnumeriques.org',
       from: req.body.email,
-      subject: 'Sending with Twilio SendGrid is Fun',
+      subject: 'Subscribers of Revolution',
       text: req.body.address,
-      html: '<strong>Joined The Revolution</strong>',
+      html: `<strong>Joined The Revolution<br>First Name: ${req.body.firstname},<br>Last Name ${req.body.lastname},<br>Middle Name: ${req.body.middlename}, <br> Address: ${req.body.address}</strong>`,
     };
   response = {
-    name: req.body.name,
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    middlename: req.body.middlename,
     email: req.body.email,
-    message: req.body.message
+    address: req.body.address
   }
   let test = async function () {
 
-    const exist = await subscriber.getByUsername(req.body.username);
+    const exist = await subscriber.getByUsername(req.body.email);
     if (exist == null) {
       let data = {
-        username: req.body.username,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        middlename: req.body.middlename,
         email: req.body.email,
         address: req.body.address
       }

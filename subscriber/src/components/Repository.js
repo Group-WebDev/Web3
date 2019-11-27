@@ -3,7 +3,7 @@ const BASE_URL = 'http://localhost:3000';
 
 export function createUser(data) {
     return axios.post(`${BASE_URL}/subscribe`,
-        { username: data.username, email: data.email, address: data.address }
+        { firstname: data.firstname, lastname:data.lastname, middlename:data.middlename, email: data.email, address: data.address }
     ).then(response => {
         window.console.log(response)
         return response.data
