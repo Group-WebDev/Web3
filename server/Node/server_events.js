@@ -56,6 +56,18 @@ var currentDate = function () {
 }
 
 
+var admin = "admin";
+var pass = "Irish4Rsdf#";
+
+app.post('/admin/login',(req, res)=>{
+  console.log(req.body)
+    if(
+        req.body.data.username == admin &&
+        req.body.data.password == pass
+    ){
+        res.status(200).send('proceed')
+    }
+})
 
 // CREATE/ADD NEW EVENT
 app.post('/event/create', (req, res) => {
@@ -104,7 +116,7 @@ app.get('/event/retrievebytitle', (req, res) => {
   test();
 })
 
-// DELETE AN SPECIFIC EVENT BY USING ITS TITLE
+// DELETE SPECIFIC EVENT BY USING ITS TITLE
 app.delete('/event/delete:id', (req, res) => {
   console.log(req.body)
   let test = async function () {
@@ -116,25 +128,30 @@ app.delete('/event/delete:id', (req, res) => {
   test();
 })
 
+
+// UPDATE SPECIFIC EVENT
 app.put('/event/update:id', (req, res) => {
+  console.log(req.params.id)
   currentDate()
   let test = async function () {
     var data = {
-      title: req.body.title,
+      title: req.body.data.title,
       dateCreated: dates,
-      dateEvent: req.body.dateEvent,
-      address: req.body.address,
-      description: req.body.description,
-      createdBy: id
-    }
-    await event.updateEvent(req.params.id, data);
+      dateEvent: req.body.data.dateEvent,
+      address: req.body.data.address,
+      description: req.body.data.description,
+      createdBy: id }
+      
+  await event.updateEvent(req.params.id, data.title,data.description,data.dateEvent,data.address);
     let events = await event.retrieveEvents();
     res.status(200).send(events);
-    console.log('uosdf')
+    console.log(events)
   }
   test();
 })
 
+
+// ADMIN
 
 app.listen(port, function () {
   console.log("done!")
