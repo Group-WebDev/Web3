@@ -67,7 +67,7 @@ app.post('/login', function (req, res) {
 })
 
 app.post('/subscribe', function (req, res) {
-  sgMail.setApiKey('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');
+  sgMail.setApiKey('');
     const msg = {
       to: 'johnpatrick.cabia-an@student.passerellesnumeriques.org',
       from: req.body.email,
