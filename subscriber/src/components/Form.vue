@@ -53,7 +53,7 @@ export default {
             let data = {username:this.username, email:this.email, address:this.address}
             createUser(data)
                 .then(data=>{
-                    this.$emit('creatUser', data.data);
+                    this.$emit('createUser', data.data);
                     this.username =""
                     localStorage.setItem('subscriber', data.data)
                 })

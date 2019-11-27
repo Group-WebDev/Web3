@@ -5,13 +5,14 @@ export function createUser(data) {
     return axios.post(`${BASE_URL}/subscribe`,
         { username: data.username, email: data.email, address: data.address }
     ).then(response => {
+        window.console.log(response)
         return response.data
     })
         .catch(err => Promise.reject(err.message));
 }
 
-export function getNotes() {
-    return axios.get(`${BASE_URL}/retrieve`)
-            .then(response => response.data);
-}
+// export function getNotes() {
+//     return axios.get(`${BASE_URL}/retrieve`)
+//             .then(response => response.data);
+// }
 

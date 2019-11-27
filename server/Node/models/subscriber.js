@@ -16,6 +16,10 @@ var Schema = new mongoose.Schema({
  Schema.statics.getLastSubscriber = async function() {
     return await this.findOne().sort({_id:-1}).limit(1);
  }
+
+ Schema.statics.retrieveSubscriber = async function(){
+     return await this.find()
+ }
  
  Schema.statics.getByUsername = async function(username) {
     return await this.findOne({"username" : username});
