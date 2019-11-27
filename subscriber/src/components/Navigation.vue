@@ -4,7 +4,6 @@
       :collapse-on-scroll="collapseOnScroll" fixed>
         <v-toolbar-title>Go Eco</v-toolbar-title>
         <v-spacer></v-spacer>
-        <v-icon large color="teal darken-2">mdi-email</v-icon>
     </v-app-bar>
 </div>
 </template>
