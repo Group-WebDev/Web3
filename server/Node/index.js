@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken")
 const bcrypt = require("bcryptjs");
 const sgMail = require('@sendgrid/mail');
 const mongoose = require('mongoose');
-const config = require('./config')
+const config = require('./config')  
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
