@@ -9,7 +9,7 @@ const create = (req, res) => {
       var admin = {
         username: "admin",
         email: "johnpatrick.cabia-an@student.passerellesnumeriques.org",
-        password: bcrypt.hashSync("g0-ec0@dm1n", 10)
+        password: bcrypt.hashSync("G0-ec0@dm1n", 10)
       };
       await account.addPerson(admin);
       let item = await account.getLastAccount();

@@ -12,17 +12,16 @@ app.use(
 
 const update = (req, res) => {
   let test = async function() {
-    var data = {
-      title: req.body.newTitle,
-      dateCreated: req.body.newdateCreated,
-      dateEvent: req.body.newdateEvent,
-      address: req.body.newaddress,
-      description: req.body.newdescription,
-      createdBy: req.body.newcreatedBy
-    };
-    let events = await event.updateEvent(data);
-    console.log("events : ", events);
-    res.status(200).send("event updated!");
+    let events = await event.updateEvent(
+      req.params.id,
+      req.body.data.title,
+      req.body.data.description,
+      req.body.data.dateEvent,
+      req.body.data.address
+    );
+    let events = await event.retrieveEvents();
+    res.status(200).send(events);
+    console.log(events)
   };
   test();
 };

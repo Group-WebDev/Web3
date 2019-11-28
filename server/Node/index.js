@@ -11,6 +11,13 @@ const retrieveAll = require('./events/retrieveAll');
 const retrieveByTitle = require('./events/retrieveByTitle')
 const remove = require('./events/delete');
 const update = require('./events/update');
+const bodyParser = require("body-parser");
+app.use(bodyParser.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
@@ -29,6 +36,15 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   console.log("we're connected")
 });
+
+const allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  next();
+}
+
+app.use(allowCrossDomain)
 app.use(cors())
 
 
@@ -54,7 +70,7 @@ app.get('/', checkToken, function (req, res) {
 app.post('/admin', (req, res) => {
   createAdmin.create(req, res);
 })
-app.post('/login', function (req, res) {
+app.post('/admin/login', function (req, res) {
   login.login(req, res);
 })
 
@@ -71,14 +87,14 @@ app.get('/event/retrieveAll', (req, res) => {
 app.get('/event/retrievebytitle', (req, res) => {
   retrieveByTitle.retrieve(req, res);
 })
-app.delete('/event/delete', (req, res) => {
+app.delete('/event/delete:id', (req, res) => {
   remove.remove(req, res);
 })
-app.put('/event/update', (req, res) => {
+app.put('/event/update:id', (req, res) => {
   update.update(req, res);
 })
 
 
-app.listen(3000, function () {
+app.listen(5000, function () {
   console.log("Connected to port : 3000!")
 })

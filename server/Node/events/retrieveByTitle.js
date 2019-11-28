@@ -13,7 +13,6 @@ app.use(
 const retrieve = (req, res) => {
   let test = async function() {
     let events = await event.getEvent(req.body.title);
-    console.log("events : ", events);
     res.status(200).send(events);
   };
   test();

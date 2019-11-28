@@ -12,7 +12,7 @@ app.use(
 
 const remove = (req, res) => {
   let test = async function() {
-    let events = await event.deleteEvent(req.body.title);
+    let events = await event.deleteEvent(req.params.id);
     console.log("events : ", events);
     res.status(200).send("events deleted!");
   };
