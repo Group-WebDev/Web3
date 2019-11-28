@@ -24,7 +24,7 @@
               counter
               @click:append="show1 = !show1"
             ></v-text-field>
-            <v-btn class="mr-4" @click="checkform" :disabled="!validinput"  color="green">submit</v-btn>
+            <v-btn class="mr-4" @click="login" :disabled="!validinput"  color="green">submit</v-btn>
             <v-btn @click="clear">clear</v-btn>
           </v-container>
         </form>
@@ -61,7 +61,7 @@ h1, h2 {
 }
 </style>
 <script>
-import {Login} from '../store/axios.js'
+import axios from 'axios'
 export default {
   data() {
     return {
@@ -86,26 +86,29 @@ export default {
     };
   },
   methods: {
-    checkform: function() {
-      let data={
-       username: this.user.username,
-       password:this.user.password
-      }
-      Login(data)
-      .then(data =>{
-        alert(data)
-        this.$emit('Login',data.data);
-
+    login() {
+      axios.post("http://localhost:3000/admin/login", {
+        data: { username: this.user.username, password: this.user.password }
       })
-      .catch(err=> alert(err));
-
-      if (data.username !== null && data.password !== null) {
-        // sessionStorage.setItem("authenticated", true);
-        // sessionStorage.setItem("username", this.username);
-        // this.$store.commit("setAuthentication", true);
-        // this.$router.push("/home");
-      }
-      // e.preventDefault();
+        .then(response => {
+          let is_admin = response.data.user.is_admin;
+          localStorage.setItem("token", response.data.token);
+          if (localStorage.getItem("token") != null) {
+            this.$emit("loggedIn");
+            if (this.$route.params.nextUrl != null) {
+              this.$router.push(this.$route.params.nextUrl);
+            } else {
+              if (is_admin == 1) {
+                this.$router.push("admin");
+              } else {
+                this.$router.push("dashboard");
+              }
+            }
+          }
+        })
+        .catch(err => {
+          alert("error");
+        })
     },
     clear() {
       this.$v.$reset();
