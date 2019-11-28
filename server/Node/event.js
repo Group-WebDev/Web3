@@ -14,21 +14,25 @@ var Schema = new mongoose.Schema({
     var result =  await Events.save(event);
     return result;
  }
- 
  Schema.statics.getLastEvent = async function() {
     return await this.findOne().sort({_id:-1}).limit(1);
  }
 
  Schema.statics.retrieveEvents = async function(){
-   return await this.find().sort({_id :-1})
+   return await this.find().sort({"_id":-1})
  }
 
- Schema.statics.getEvent = async function(title) {
-   return await this.findOne({"title" : title});
+ Schema.statics.getEvent = async function(id) {
+   return await this.findOne({"_id" : id});
 }
 
+
+// collection.update({_id:"123"}, {$set: {author:"Jessica"}});
+// data.title,data.description,data.dateEvent,data.address
  Schema.statics.updateEvent = async function(id,title,description,dateEvent,address) {
-return await this.updateOne({"_id" : id},{$set: {title: title, description : description, dateEvent: dateEvent , address:address}});
+      //  var updateEvent = new this(newEvent);
+return await this.updateOne({"_id" : id},{$set: {title: title, description:description,
+   dateEvent:dateEvent,address: address}});
 }
 
  Schema.statics.deleteEvent = async function(id) {
