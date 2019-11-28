@@ -1,23 +1,27 @@
 const express = require('express')
 const app = express();
-const path = require("path");
-const account = require("./models/admin");
-const subscriber = require("./models/subscriber");
-const event = require("./models/event");
-const bodyParser = require('body-parser')
 const cors = require('cors')
-const jwt = require("jsonwebtoken")
-const bcrypt = require("bcryptjs");
-const sgMail = require('@sendgrid/mail');
 const mongoose = require('mongoose');
-const config = require('./config')  
+const login = require('./admin/login');
+const verify = require('./admin/verifyToken');
+const createAdmin = require('./admin/createAdmin');
+// const subscribe = require('./subscriber/subscribe');
+const create  = require('./events/create');
+const retrieveAll = require('./events/retrieveAll');
+const retrieveByTitle = require('./events/retrieveByTitle')
+const remove = require('./events/delete');
+const update = require('./events/update');
+const retrieveSubscriber = require('./subscriber/retrieveSubscribers')
+const sgMail = require('@sendgrid/mail');
+const subscriber = require("./models/subscriber");
+const bodyParser = require('body-parser')
 
 mongoose.set('useNewUrlParser', true);
 mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 
-mongoose.connect('mongodb://localhost:27017/accounts', {
+mongoose.connect('mongodb://localhost:27017/Users', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -29,112 +33,72 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function () {
   console.log("we're connected")
 });
+
+const allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Methods', '*');
+  res.header('Access-Control-Allow-Headers', '*');
+  next();
+}
+
+app.use(allowCrossDomain)
 app.use(cors())
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-app.get('/', function (req, res, next) {
-  let token = req.headers.token
-  console.log(req.headers.token)
-  if (token.startsWith('Bearer ')) {
-    // Remove Bearer from string
-    token = token.slice(7, token.length);
-  }
-  if (token) {
-    jwt.verify(token, config.secret, (err, decoded) => {
-      if (err) {
-        return res.json({
-          success: false,
-          message: 'Token is not valid'
-        });
-      } else {
-        req.decoded = decoded;
-        next();
-        res.status(200).json({
-          message : "Auth token is valid"
-        })
-      }
-    });
+
+const checkToken = (req, res, next) => {
+  console.log(req.headers)
+  const header = req.headers['authorization'];
+
+  if(typeof header !== 'undefined') {
+      const bearer = header.split(' ');
+      const token = bearer[1];
+
+      req.token = token;
+      next();
   } else {
-    return res.json({
-      success: false,
-      message: 'Auth token is not supplied'
-    });
+      //If header is undefined return Forbidden (403)
+      res.sendStatus(403)
   }
+}
+
+app.get('/', checkToken, function (req, res) {
+  verify.verifyToken(req, res);
 })
-
-
-app.get('/login', function (req, res) {
-  let test = async function () {
-    console.log(req.headers.username)
-    const exist = await account.getByUsernameAndGetPassword(req.headers.username);
-    if (exist == null) {
-      res.status(401).json({
-        message: "Validation failed. Given username and password aren't matching."
-      })
-    } else {
-      if (bcrypt.compareSync(password, exist[0].password)) {
-        var token = jwt.sign({
-          exist
-        }, config.secret, {
-          expiresIn: 86400 // expires in 24 hours
-        })
-        res.status(200).json({
-          success: true,
-          token: token,
-        })
-      }
-      else {
-        res.status(401).json({
-          message: "Validation failed. Given username and password aren't matching."
-        })
-      }
-    }
-  }
-  test();
+app.post('/admin', (req, res) => {
+  createAdmin.create(req, res);
 })
-
-app.post('/register', function (req, res) {
-  const hash = bcrypt.hashSync(req.headers.password, saltRounds);
-  let test = async function () {
-    const exist = await account.getByUsername(req.headers.username);
-    console.log("username", exist)
-    if (exist == null) {
-      let data = {
-        username: req.headers.username,
-        email: req.headers.email,
-        password: hash
-      }
-      await account.addPerson(data);
-      let item = await account.getLastAccount();
-      res.status(200).send(item)
-    } else {
-      res.status(401).json({
-        message: 'Username already exist!'
-      })
-    }
-  }
-  test();
+app.post('/admin/login', function (req, res) {
+  login.login(req, res);
 })
 
 app.post('/subscribe', function (req, res) {
-  sgMail.setApiKey();
-  const msg = {
-    to: 'johnpatrick.cabia-an@student.passerellesnumeriques.org',
-    from: req.body.email,
-    subject: 'Sending with Twilio SendGrid is Fun',
-    text: req.body.address,
-    html: `<strong> ${req.body.username} From ${req.body.address}Joined The Revolution</strong>`,
-  };
-
+  sgMail.setApiKey('');
+    const msg = {
+      to: 'johnpatrick.cabia-an@student.passerellesnumeriques.org',
+      from: req.body.email,
+      subject: 'Subscribers of Revolution',
+      text: req.body.address,
+      html: `<strong>Joined The Revolution<br>First Name: ${req.body.firstname},<br>Last Name ${req.body.lastname},<br>Middle Name: ${req.body.middlename}, <br> Address: ${req.body.address}</strong>`,
+    };
+  response = {
+    firstname: req.body.firstname,
+    lastname: req.body.lastname,
+    middlename: req.body.middlename,
+    email: req.body.email,
+    address: req.body.address
+  }
   let test = async function () {
 
-    const exist = await subscriber.getByUsername(req.body.username);
+    const exist = await subscriber.getByUsername(req.body.email);
     if (exist == null) {
       let data = {
-        username: req.body.username,
+        firstname: req.body.firstname,
+        lastname: req.body.lastname,
+        middlename: req.body.middlename,
         email: req.body.email,
         address: req.body.address
       }
@@ -148,27 +112,30 @@ app.post('/subscribe', function (req, res) {
       })
     }
   }
-  sgMail.send(msg);
-  test();
-
-})
-
-app.post('/addEvent', (req, res) => {
-  let test = async function () {
-    let data = {
-      title: req.headers.title,
-      dateCreated: req.headers.datecreated,
-      dateEvent: req.headers.dateevent,
-      address: req.headers.address,
-      description: req.headers.description,
-      createdBy: req.headers.createdby
-    }
-    await event.addEvent(data);
-    let item = await event.getLastEvent();
-    res.send(item)
-  }
+sgMail.send(msg);
   test();
 })
+
+app.get('/subscribers/retrieveAll', function(req, res){
+  retrieveSubscriber.retrieveSubscribers(req, res)
+})
+
+app.post('/event/create', (req, res) => {
+  create.createEvent(req, res);
+})
+app.get('/event/retrieveAll', (req, res) => {
+  retrieveAll.retrieve(req, res);
+})
+app.get('/event/retrievebytitle', (req, res) => {
+  retrieveByTitle.retrieve(req, res);
+})
+app.delete('/event/delete', (req, res) => {
+  remove.remove(req, res);
+})
+app.put('/event/update', (req, res) => {
+  update.update(req, res);
+})
+
 
 app.listen(3000, function () {
   console.log("Connected to port : 3000!")

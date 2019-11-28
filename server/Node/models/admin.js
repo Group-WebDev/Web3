@@ -24,8 +24,8 @@ var Schema = new mongoose.Schema({
     return await this.findOne({"username" : username});
  }
  
- Schema.statics.getAccount = async function(username, password) {
-    return await this.findOne({"username" : username, "password": password});
+ Schema.statics.getAccount = async function(username) {
+    return await this.findOne({"username" : username});
  }
 
  module.exports = mongoose.model('admin', Schema);

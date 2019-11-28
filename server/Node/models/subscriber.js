@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
 var Schema = new mongoose.Schema({
-    username: {type:String,  unique:true},
-    email: {type: String},
+    firstname: {type:String},
+    lastname:{type:String},
+    middlename:{type:String},
+    email: {type: String, unique:true},
     address: {type: String}
  });
 
@@ -16,9 +18,13 @@ var Schema = new mongoose.Schema({
  Schema.statics.getLastSubscriber = async function() {
     return await this.findOne().sort({_id:-1}).limit(1);
  }
+
+ Schema.statics.retrieveSubscriber = async function(){
+     return await this.find()
+ }
  
- Schema.statics.getByUsername = async function(username) {
-    return await this.findOne({"username" : username});
+ Schema.statics.getByUsername = async function(email) {
+    return await this.findOne({"email" : email});
  }
 
  module.exports = mongoose.model('subscriber', Schema);
