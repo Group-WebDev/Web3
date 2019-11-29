@@ -94,10 +94,14 @@ var publicDir = require('path').join(__dirname,'/public');
 app.use(express.static(publicDir));
 // http://localhost/myapp/public/images/myImage.jpg
 
-app.get('/retrieveImage',req, res =>{
+// app.get('/retrieveImage',req, res =>{
     
-})
+// })
 
+app.get('/images/:filename',(req, res) =>{
+    console.log(__dirname + '/uploads/' + req.params.filename)
+    res.sendFile(__dirname + '/uploads/' + req.params.filename )
+  })
 
 
 app.listen(PORT, () => {

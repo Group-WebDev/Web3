@@ -1,5 +1,6 @@
 const express = require('express')
 const app = express();
+const multer = require('multer');
 const path = require("path");
 const event = require("./event.js");
 const bodyParser = require('body-parser')
@@ -69,6 +70,81 @@ app.post('/admin/login',(req, res)=>{
     }
 })
 
+// FOR IMAGE
+
+var imgUrl = `http://localhost:${port}/files/`
+var ImageSchema = mongoose.Schema({
+    name: String,
+    src: String
+});
+
+// compile schema to model
+var Image = mongoose.model('Image', ImageSchema, 'images'); //images is the collection
+
+var storage = multer.diskStorage({
+    destination: function(req, file, cb) {
+        cb(null, 'uploads')
+    },
+    filename: function(req, file, cb) {
+        var filename = `uploads_${Math.round(+new Date()/1000)}_${file.originalname}`
+        cb(null, filename)
+    }
+})
+
+var upload = multer({ storage: storage, limits: { fileSize: 1000000000 } })
+
+
+// note 'img' in upload is the key you use in FormData in frontend
+//e.g : var data =  new FormData()
+// data.append('img' ,uploadedFiles)
+
+app.post('/upload', upload.array('img'), (req, res, next) => {
+    const imgs = req.files
+    console.log(imgs)
+    if (!imgs) {
+        const error = new Error('Please upload a file')
+        error.httpStatusCode = 400
+        return next(error)
+    } else {
+        imgs.map(img => {
+            let src = `${imgUrl}${img.filename}`; //save this to db  
+            var new_img = new Image({ name: img.filename, src: src });
+            // save model to database
+            new_img.save(function(err, imgSaved) {
+                if (err) return console.error(err);
+                console.log(imgSaved.name + " saved to images collection.");
+            });
+            img.src = `http://localhost:${port}/static/uploads/${img.filename}`
+        })
+        res.send(imgs)
+    }
+})
+app.post('/uploadSingle', upload.single('img'), (req, res, next) => {
+    const img = req.file
+    if (!img) {
+        const error = new Error('Please select a file')
+        error.httpStatusCode = 400
+        return next(error)
+    } else {
+        store(img.filename)
+        res.send("success")
+    }
+})
+var publicDir = require('path').join(__dirname,'/public');
+
+app.use(express.static(publicDir));
+// http://localhost/myapp/public/images/myImage.jpg
+
+// app.get('/retrieveImage',req, res =>{
+    
+// })
+
+app.get('/images/:filename',(req, res) =>{
+    console.log(__dirname + '/uploads/' + req.params.filename)
+    res.sendFile(__dirname + '/uploads/' + req.params.filename )
+  })
+
+
 // CREATE/ADD NEW EVENT
 app.post('/event/create', (req, res) => {
   // console.log(req.body)
@@ -81,7 +157,8 @@ app.post('/event/create', (req, res) => {
       dateEvent: d.dateevent,
       address: d.address,
       description: d.description,
-      createdBy: id
+      createdBy: id,
+      image: d.imageName
     }
     await event.addEvent(data);
     let item = await event.getLastEvent();
@@ -90,8 +167,6 @@ app.post('/event/create', (req, res) => {
   }
   test();
 })
-
-
 
 // DISPLAY ALL SAVED EVENTS.
 app.get('/event/retrieveAll', (req, res) => {
@@ -151,7 +226,14 @@ app.put('/event/update:id', (req, res) => {
 })
 
 
+
+
 // ADMIN
+
+// retrieve image from the folder
+// app.get('/images/:filename',(req, res) =>{
+//   res.sendFile(_dirname + '/images/public' + req.params.filename )
+// })
 
 app.listen(port, function () {
   console.log("done!")
