@@ -12,7 +12,7 @@
                             <v-icon>mdi-close</v-icon>
                         </v-btn><br/>
                         <h1>Welcome To</h1>
-                        <p1>Your Email will sent to Admin For more Conversations about activities</p1>
+                        <p>Your Email will sent to Admin For more Conversations about activities</p>
                     </div>
                     <v-img :src="require('@/assets/logos.png')" id="image"></v-img>
                 </center>
