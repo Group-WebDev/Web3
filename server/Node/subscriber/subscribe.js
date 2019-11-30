@@ -12,7 +12,7 @@ app.use(
 );
 
 const subscribe = (req, res) => {
-  sgMail.setApiKey('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');
+  sgMail.setApiKey('');
     const msg = {
       to: 'johnpatrick.cabia-an@student.passerellesnumeriques.org',
       from: req.body.email,
