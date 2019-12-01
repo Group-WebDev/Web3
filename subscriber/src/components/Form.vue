@@ -8,7 +8,7 @@
         <v-container>
             <center>
              <h1 v-show="isSubscribe">Welcome To</h1>
-                <v-img :src="require('@/assets/logo.png')" id="image"></v-img>
+                <v-img :src="require('@/assets/go-eco.png')" id="image"></v-img>
             </center>
             <form id="form" @submit.prevent="subscribe" v-show="!isSubscribe">
                 <v-container>

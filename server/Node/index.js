@@ -11,7 +11,30 @@ const retrieveAll = require('./events/retrieveAll');
 const retrieveByTitle = require('./events/retrieveByTitle')
 const remove = require('./events/delete');
 const update = require('./events/update');
+const multer = require('multer');
 const bodyParser = require("body-parser");
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+      cb(null, './public/images');
+  },
+  filename: (req, file, cb) => {
+      var filetype = '';
+
+      if (file.mimetype === 'image/gif') {
+          filetype = 'gif';
+      }
+      if (file.mimetype === 'image/png') {
+          filetype = 'png';
+      }
+      if (file.mimetype === 'image/jpeg') {
+          filetype = 'jpg';
+      }
+      cb(null, file.fieldname + Date.now() + '.' + filetype);
+  }
+});
+const upload = multer({ storage: storage });
+
 app.use(bodyParser.json());
 app.use(
   bodyParser.urlencoded({
@@ -24,7 +47,7 @@ mongoose.set('useFindAndModify', false);
 mongoose.set('useCreateIndex', true);
 mongoose.set('useUnifiedTopology', true);
 
-mongoose.connect('mongodb://localhost:27017/accounts', {
+mongoose.connect('mongodb://localhost:27017/goeco', {
   useNewUrlParser: true,
   useUnifiedTopology: true
 })
@@ -67,9 +90,8 @@ const checkToken = (req, res, next) => {
 app.get('/', checkToken, function (req, res) {
   verify.verifyToken(req, res);
 })
-app.post('/admin', (req, res) => {
-  createAdmin.create(req, res);
-})
+// app.post('/admin', (req, res) => {
+// })
 app.post('/admin/login', function (req, res) {
   login.login(req, res);
 })
@@ -78,7 +100,7 @@ app.post('/subscribe', function (req, res) {
   subscribe.subscribe(req, res);
 })
 
-app.post('/event/create', (req, res) => {
+app.post('/event/create',upload.single('file'), (req, res) => {
   create.createEvent(req, res);
 })
 app.get('/event/retrieveAll', (req, res) => {

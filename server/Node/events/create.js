@@ -62,6 +62,7 @@ const createEvent = (req, res) => {
       title: d.title,
       dateCreated: dates,
       dateEvent: d.dateevent,
+      url : req.file.filename,
       address: d.address,
       description: d.description,
       createdBy: id
