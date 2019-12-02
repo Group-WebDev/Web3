@@ -7,6 +7,7 @@ var Schema = new mongoose.Schema({
     address: {type: String, required : true},
     description: {type: String, required : true},
     createdBy: {type: String, required : true},
+    image :{type: String, required: false}
  });
 
  Schema.statics.addEvent = async function (event){

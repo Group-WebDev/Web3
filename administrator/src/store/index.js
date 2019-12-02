@@ -2,15 +2,16 @@ import Vue from "vue";
 import Vuex from "vuex";
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import { isNull } from "util";
 
 Vue.use(VueAxios, axios)
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    authenticated : isNull(sessionStorage.getItem("authenticated")) ? false : true,
     status: '',
-        token: localStorage.getItem('token') || '',
-        user: {}
+        token: localStorage.getItem('token') || ''
   },
   mutations: {
     isLoggedIn: state => !!state.token,
@@ -22,7 +23,6 @@ export default new Vuex.Store({
     auth_success(state, token, user) {
       state.status = 'success'
       state.token = token
-      state.user = user
     },
     auth_error(state) {
       state.status = 'error'
@@ -31,6 +31,10 @@ export default new Vuex.Store({
       state.status = ''
       state.token = ''
     },
+    setAuthentication(state, status) {
+      sessionStorage.setItem("authenticated", status)
+      state.authenticated = status;
+  }
   },
   actions: {
     // login({ commit }, user) {
@@ -56,6 +60,7 @@ export default new Vuex.Store({
     logout({ commit }) {
       return new Promise((resolve) => {
         commit('logout')
+        sessionStorage.setItem("authenticated", false)
         localStorage.removeItem('token')
         delete axios.defaults.headers.common['Authorization']
         resolve()

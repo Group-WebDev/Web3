@@ -2,17 +2,31 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Login from "../views/Login.vue"
+import store from "@/store/index.js"
+import SusbcriberList from '@/components/SubscriberTable.vue'
 // import Sidebar from "../components/Sidebar.vue";
 import Dashboard from "../views/Dashboard.vue";
 import AddEvent from "../components/AddEvent.vue";
-import Subscribers from '@/components/SubscriberTable.vue'
 Vue.use(VueRouter);
 
-const routes = [
-  {
-    path: "/admin",
+const routes = [{
+    path: "/login",
     name: "login",
-    component: Login
+    component: Login,
+    beforeEnter: (to, from, next) => {
+      if (store.state.authenticated == true) {
+        next("/a");
+      } else {
+        next();
+      }
+
+    },
+  },
+  {
+    path: "/",
+    redirect: {
+      path: "/login"
+    }
   },
   {
     path: "/home",
@@ -20,32 +34,48 @@ const routes = [
     component: Home
   },
   {
-    path:'/subcribers',
-    name:'subscribers',
-    component:Subscribers
-  },
-  // {
-  //   path:"/sidebar",
-  //   name:"sidebar",
-  //   component:Sidebar,
-  //   meta: {
-  //       tokenRequired: false
-  //   }
-  // },
-  {
-    path:"/dashboard",
-    name:"dashboard",
-    component:Dashboard ,
+    path: "/dashboard",
+    name: "dashboard",
+    component: Dashboard,
     meta: {
-        tokenRequired: false
+      tokenRequired: false
+    },
+    beforeEnter: (to, from, next) => {
+      if (store.state.authenticated == false) {
+        next("/login");
+      } else {
+        next();
+      }
     }
   },
   {
-    path:"/addevent",
-    name:"addevent",
-    component:AddEvent,
+    path: "/addevent",
+    name: "addevent",
+    component: AddEvent,
     meta: {
-        tokenRequired: false
+      tokenRequired: false
+    },
+    beforeEnter: (to, from, next) => {
+      if (store.state.authenticated == false) {
+        next("/login");
+      } else {
+        next();
+      }
+    }
+  },
+   {
+    path: "/subscribers",
+    name: "subscribers",
+    component: SusbcriberList,
+    meta: {
+      tokenRequired: false
+    },
+    beforeEnter: (to, from, next) => {
+      if (store.state.authenticated == false) {
+        next("/login");
+      } else {
+        next();
+      }
     }
   },
   // {
@@ -63,7 +93,14 @@ const routes = [
     // this generates a separate chunk (about.[hash].js) for this route
     // which is lazy-loaded when the route is visited.
     component: () =>
-      import(/* webpackChunkName: "about" */ "../views/About.vue")
+      import( /* webpackChunkName: "about" */ "../views/About.vue"),
+    beforeEnter: (to, from, next) => {
+      if (store.state.authenticated == false) {
+        next("/login");
+      } else {
+        next();
+      }
+    }
   }
 ];
 

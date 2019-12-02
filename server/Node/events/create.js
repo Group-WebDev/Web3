@@ -3,6 +3,7 @@ const event = require("../models/event");
 const express = require('express')
 const app = express();
 
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({
   extended: true
@@ -33,6 +34,7 @@ var days = [
   "Friday",
   "Saturday"
 ];
+
 
 var currentDate = function() {
   var d = new Date();

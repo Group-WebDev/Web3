@@ -8,7 +8,6 @@
   </v-app>
 </template>
 <style>
-
 </style>
 
 <script>

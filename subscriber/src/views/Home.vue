@@ -1,18 +1,20 @@
 <template>
 <div id="app">
-  <Carousel/>
-  <Content/>
+    <Carousel />
+    <v-container>
+        <Events />
+    </v-container>
 </div>
 </template>
 
 <script>
 // @ is an alias to /src
 import Carousel from "@/components/Common/Carousel.vue";
-import Content from "@/components/Content.vue"
+import Events from "@/components/Events.vue"
 export default {
-    components:{
-      Carousel,
-      Content
+    components: {
+        Carousel,
+        Events
     }
 }
 </script>
